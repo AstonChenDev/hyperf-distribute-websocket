@@ -1,0 +1,31 @@
+{
+  "name": "aston/distribute-ws",
+  "description": "基于redis发布订阅实现的ws分布式通信",
+  "type": "library",
+  "require": {
+    "hyperf/process": "^2.2",
+    "psr/container": "^1.0|^2.0",
+    "hyperf/utils": "~2.2.0",
+    "hyperf/websocket-server": "2.2.*",
+    "hyperf/redis": "2.2.*",
+    "ext-redis": "*"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Aston\\DistributeWs\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "ChenPeng",
+      "email": "chenpeng@kiwiing.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "extra": {
+    "hyperf": {
+      "config": "Aston\\DistributeWs\\ConfigProvider"
+    }
+  }
+}
