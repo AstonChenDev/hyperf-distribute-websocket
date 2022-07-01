@@ -51,7 +51,11 @@ class Sender implements ISender
      */
     public function send(int $uid, string $data): bool
     {
-        return ApplicationContext::getContainer()->get(ISocketClientService::class)->findUserFd($uid)->send($data);
+        $fd = ApplicationContext::getContainer()->get(ISocketClientService::class)->findUserFd($uid);
+        if (!$fd) {
+            return false;
+        }
+        return $fd->send($data);
     }
 
     /**
