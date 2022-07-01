@@ -18,7 +18,7 @@ interface ISender
      * @param int $opcode
      * @return bool
      */
-    public function doSend(string $server_id, int $server_fd, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool;
+    public function doSend(string $server_id, int $server_fd, $data, int $opcode = 0): bool;
 
     /**
      * Notes: 批量发送消息
@@ -29,7 +29,7 @@ interface ISender
      * @param int $opcode
      * @return bool
      */
-    public function send(int $uid, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool;
+    public function send(int $uid, $data, int $opcode = 0): bool;
 
     /**
      * Notes: 批量发送消息
@@ -40,7 +40,7 @@ interface ISender
      * @param int $opcode
      * @return int
      */
-    public function sendMulti(array $uids, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): int;
+    public function sendMulti(array $uids, $data, int $opcode = 0): int;
 
     /**
      * Notes: 给所有有效连接发送消息
@@ -50,7 +50,7 @@ interface ISender
      * @param int $opcode
      * @return bool
      */
-    public function sendAll($data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool;
+    public function sendAll($data, int $opcode = 0): bool;
 
     /**
      * Notes: 发送消息给本地FD
@@ -60,7 +60,7 @@ interface ISender
      * @param  $data
      * @return void
      */
-    public function sendToLocal(int $fd, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): void;
+    public function sendToLocal(int $fd, $data, int $opcode = 0): void;
 
     /**
      * Notes: 获取本地服务器所有连接

@@ -40,6 +40,7 @@ php bin/hyperf.php vendor:publish aston/distribute-ws
     'user_relate_fd_key' => 'user:relate:fd:%s',//用户ID与分布式FD关联key
     'fd_relate_user_key' => 'fd:relate:user:%s',//分布式FD与用户ID关联key
     'ttl' => 7200,//key的过期时间
+     'default_opcode' => WEBSOCKET_OPCODE_BINARY,//默认消息类型 发送时也可传参指定
     'server_id' => env('DISTRIBUTE_SERVER_ID', uniqid()),//服务器ID，分布式部署时保证每台服务器的SERVER_ID不同即可
 ]
 ```
@@ -101,12 +102,16 @@ class WebSocketController implements OnMessageInterface, OnOpenInterface, OnClos
         }
         //向这个fd单独推送消息
         $distribute_fd->send($text);
+        $distribute_fd->send($text, WEBSOCKET_OPCODE_TEXT);
         //向这个uid单独推送消息
         $this->sender->send($uid, $text);
+        $this->sender->send($uid, $text, WEBSOCKET_OPCODE_TEXT);
         //向多个用户发送同一条消息
         $this->sender->sendMulti([$uid, (int)Context::get('uid')], $text);
+        $this->sender->sendMulti([$uid, (int)Context::get('uid')], $text, WEBSOCKET_OPCODE_TEXT);
         //向所有服务器的所有客户端推送消息
         $this->sender->sendAll($text);
+        $this->sender->sendAll($text, WEBSOCKET_OPCODE_TEXT);
     }
 
     public function onClose($server, int $fd, int $reactorId): void

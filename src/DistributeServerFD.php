@@ -29,7 +29,7 @@ class DistributeServerFD implements \Stringable
      * @param int $opcode
      * @return bool
      */
-    public function send($data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool
+    public function send($data, int $opcode = 0): bool
     {
         return ApplicationContext::getContainer()->get(ISender::class)->doSend($this->server_id, $this->server_fd, $data, $opcode);
     }

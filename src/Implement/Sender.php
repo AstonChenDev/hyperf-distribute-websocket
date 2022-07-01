@@ -10,9 +10,24 @@ use Hyperf\Redis\RedisFactory;
 use Hyperf\Server\ServerFactory;
 use Hyperf\Utils\ApplicationContext;
 use Iterator;
+use Psr\Container\ContainerInterface;
 
 class Sender implements ISender
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected ContainerInterface $container;
+
+    private int $default_opcode;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+        $config = $container->get(ConfigInterface::class);
+        $this->default_opcode = (int)$config->get('distribute_ws.default_opcode', WEBSOCKET_OPCODE_BINARY);
+    }
+
     /**
      * Notes: 执行发送消息
      * User: 陈朋
@@ -23,7 +38,7 @@ class Sender implements ISender
      * @param int $opcode
      * @return bool
      */
-    public function doSend(string $server_id, int $server_fd, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool
+    public function doSend(string $server_id, int $server_fd, $data, int $opcode = 0): bool
     {
         $container = ApplicationContext::getContainer();
 
@@ -51,7 +66,7 @@ class Sender implements ISender
      * @param int $opcode
      * @return bool
      */
-    public function send(int $uid, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool
+    public function send(int $uid, $data, int $opcode = 0): bool
     {
         $fd = ApplicationContext::getContainer()->get(ISocketClientService::class)->findUserFd($uid);
         if (!$fd) {
@@ -69,7 +84,7 @@ class Sender implements ISender
      * @param int $opcode
      * @return int
      */
-    public function sendMulti(array $uids, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): int
+    public function sendMulti(array $uids, $data, int $opcode = 0): int
     {
         $count = 0;
         foreach ($uids as $uid) {
@@ -88,7 +103,7 @@ class Sender implements ISender
      * @param int $opcode
      * @return bool
      */
-    public function sendAll($data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool
+    public function sendAll($data, int $opcode = 0): bool
     {
         return $this->doSend(self::SERVER_CHANNEL, 0, $data, $opcode);
     }
@@ -102,11 +117,14 @@ class Sender implements ISender
      * @param int $opcode
      * @return void
      */
-    public function sendToLocal(int $fd, $data, int $opcode = WEBSOCKET_OPCODE_BINARY): void
+    public function sendToLocal(int $fd, $data, int $opcode = 0): void
     {
         $server = ApplicationContext::getContainer()->get(ServerFactory::class)->getServer()->getServer();
         $client_info = $server->getClientInfo($fd);
         if (isset($client_info['websocket_status']) && $client_info['websocket_status'] === WEBSOCKET_STATUS_ACTIVE) {
+            if (!$opcode) {
+                $opcode = $this->default_opcode;
+            }
             $server->push($fd, $data, $opcode);
         }
     }
