@@ -25,12 +25,13 @@ class DistributeServerFD implements \Stringable
      * Notes: 发送消息
      * User: 陈朋
      * DateTime: 2022/6/30 下午4:47
-     * @param string $data
+     * @param  $data
+     * @param int $opcode
      * @return bool
      */
-    public function send(string $data): bool
+    public function send($data, int $opcode = WEBSOCKET_OPCODE_BINARY): bool
     {
-        return ApplicationContext::getContainer()->get(ISender::class)->doSend($this->server_id, $this->server_fd, $data);
+        return ApplicationContext::getContainer()->get(ISender::class)->doSend($this->server_id, $this->server_fd, $data, $opcode);
     }
 
     /**

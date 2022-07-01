@@ -48,13 +48,14 @@ class SubscribeProcess extends AbstractProcess
         $distribute_msg = unserialize($msg);
         $data = $distribute_msg->getMsg();
         $fd = $distribute_msg->getFd();
+        $opcode = $distribute_msg->getOpcode();
 
         if ($channel === ISender::SERVER_CHANNEL) {
             foreach ($this->container->get(ISender::class)->localFds() as $local_fd) {
-                $this->container->get(ISender::class)->sendToLocal($local_fd, $data);
+                $this->container->get(ISender::class)->sendToLocal($local_fd, $data, $opcode);
             }
             return;
         }
-        $this->container->get(ISender::class)->sendToLocal($fd, $data);
+        $this->container->get(ISender::class)->sendToLocal($fd, $data, $opcode);
     }
 }

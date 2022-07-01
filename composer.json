@@ -8,7 +8,8 @@
     "hyperf/utils": "~2.2.0",
     "hyperf/websocket-server": "2.2.*",
     "hyperf/redis": "2.2.*",
-    "ext-redis": "*"
+    "ext-redis": "*",
+    "swoft/swoole-ide-helper": "^4.2"
   },
   "license": "MIT",
   "autoload": {
