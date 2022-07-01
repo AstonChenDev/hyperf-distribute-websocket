@@ -15,6 +15,10 @@
 php >=7.2
 hyperf >= 2.2
 
+### 理论参考
+
+[Hyperf搭建websocket集群项目（通过redis发布订阅）](https://learnku.com/articles/69165)
+
 ## 安装
 
 使用 composer
