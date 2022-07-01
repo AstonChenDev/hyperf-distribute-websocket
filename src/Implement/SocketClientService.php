@@ -72,7 +72,7 @@ class SocketClientService implements ISocketClientService
      * @param int $fd
      * @return DistributeServerFD
      */
-    private function genDistributeFd(int $fd): DistributeServerFD
+    public function genDistributeFd(int $fd): DistributeServerFD
     {
         $distribute_fd = $this->server_id . $this->separator . $fd;
         return make(DistributeServerFD::class, [$distribute_fd, $this->server_id, $fd]);

@@ -8,6 +8,15 @@ interface ISocketClientService
 {
 
     /**
+     * Notes: 生成分布式FD
+     * User: 陈朋
+     * DateTime: 2022/6/30 下午4:03
+     * @param int $fd
+     * @return DistributeServerFD
+     */
+    public function genDistributeFd(int $fd): DistributeServerFD;
+
+    /**
      * Notes: 获取serverID
      * User: 陈朋
      * DateTime: 2022/6/30 下午5:28
