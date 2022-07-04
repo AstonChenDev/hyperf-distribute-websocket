@@ -14,10 +14,11 @@ use Hyperf\Redis\RedisFactory;
 
 /**
  * 订阅redis频道进程
- * @Process(name="subscribe_process")
  */
 class SubscribeProcess extends AbstractProcess
 {
+    public $name = 'subscribe_process';
+
     public function handle(): void
     {
         $server_id = $this->container->get(ISocketClientService::class)->getServerId();

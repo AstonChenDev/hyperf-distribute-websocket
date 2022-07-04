@@ -14,18 +14,18 @@ namespace Aston\DistributeWs;
 
 use Aston\DistributeWs\Contract\ISender;
 use Aston\DistributeWs\Contract\ISocketClientService;
-use Aston\DistributeWs\Implement\Sender;
+use Aston\DistributeWs\Driver\QueueDriver;
+use Aston\DistributeWs\Driver\SubscribeDriver;
 use Aston\DistributeWs\Implement\SocketClientService;
+use Aston\DistributeWs\Process\AsyncQueueConsumer;
+use Aston\DistributeWs\Process\SubscribeProcess;
+use Hyperf\AsyncQueue\Driver\RedisDriver;
 
 class ConfigProvider
 {
     public function __invoke(): array
     {
-        return [
-            'dependencies' => [
-                ISocketClientService::class => SocketClientService::class,
-                ISender::class => Sender::class,
-            ],
+        $config = [
             'annotations' => [
                 'scan' => [
                     'paths' => [
@@ -42,5 +42,46 @@ class ConfigProvider
                 ],
             ],
         ];
+        $path = file_exists($config['publish'][0]['destination']) ? $config['publish'][0]['destination'] : $config['publish'][0]['source'];
+        $custom_conf = require_once $path;
+        $driver = $custom_conf['driver'] ?? QueueDriver::class;
+        $server_id = $custom_conf['server_id'] ?? uniqid();
+        $queue_config = $custom_conf['queue_config'] ?? [
+                'process_num' => 1,
+                'process_concurrent_limit' => 10
+            ];
+
+        switch ($driver) {
+            case QueueDriver::class:
+                $config['async_queue']['local'] = [
+                    'driver' => RedisDriver::class,
+                    'redis' => [
+                        'pool' => 'default'
+                    ],
+                    'channel' => $server_id,
+                    'timeout' => 2,
+                    'retry_seconds' => 5,
+                    'handle_timeout' => 10,
+                    'processes' => $queue_config['process_num'],
+                    'concurrent' => [
+                        'limit' => $queue_config['process_concurrent_limit']
+                    ],
+                ];
+                $processes = AsyncQueueConsumer::class;
+                break;
+            case SubscribeDriver::class:
+                $processes = SubscribeProcess::class;
+                break;
+            default:
+                throw new \Exception($driver . ' is not supported');
+        }
+        $config['processes'] = [
+            $processes
+        ];
+        $config['dependencies'] = [
+            ISocketClientService::class => SocketClientService::class,
+            ISender::class => $driver
+        ];
+        return $config;
     }
 }

@@ -6,6 +6,7 @@
     "hyperf/process": "^2.2",
     "psr/container": "^1.0|^2.0",
     "hyperf/utils": "~2.2.0",
+    "hyperf/async-queue": "2.2.*",
     "hyperf/websocket-server": "2.2.*",
     "hyperf/redis": "2.2.*",
     "ext-redis": "*",
