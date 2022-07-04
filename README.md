@@ -40,7 +40,12 @@ php bin/hyperf.php vendor:publish aston/distribute-ws
     'user_relate_fd_key' => 'user:relate:fd:%s',//用户ID与分布式FD关联key
     'fd_relate_user_key' => 'fd:relate:user:%s',//分布式FD与用户ID关联key
     'ttl' => 7200,//key的过期时间
-     'default_opcode' => WEBSOCKET_OPCODE_BINARY,//默认消息类型 发送时也可传参指定
+    'default_opcode' => WEBSOCKET_OPCODE_BINARY,//默认消息类型 发送时也可传参指定,
+    'driver' => QueueDriver::class,// 可选择 Aston\DistributeWs\Driver\QueueDriver::class 异步队列 |  Aston\DistributeWs\Driver\SubscribeDriver::class 发布订阅
+    'queue_config' => [
+        'process_num' => env('LOCAL_PUSH_PROCESS_NUM', 1),//消费队列进程数量
+        'process_concurrent_limit' => env('LOCAL_PUSH_PROCESS_CONCURRENT_LIMIT', 10)//消费队列同时处理消息数
+    ],
     'server_id' => env('DISTRIBUTE_SERVER_ID', uniqid()),//服务器ID，分布式部署时保证每台服务器的SERVER_ID不同即可
 ]
 ```
@@ -118,7 +123,6 @@ class WebSocketController implements OnMessageInterface, OnOpenInterface, OnClos
     {
          // 解除分布式fd与用户绑定关系
          $this->socketClientService->removeRelation($this->socketClientService->genDistributeFd($fd)->toString());
-
     }
 }
 
