@@ -3,15 +3,13 @@
   "description": "基于redis发布订阅实现的ws分布式通信",
   "type": "library",
   "require": {
-    "hyperf/process": "~3.0.0",
+    "hyperf/process": "^2.2",
     "psr/container": "^1.0|^2.0",
-    "hyperf/utils": "~3.0.0",
-    "hyperf/async-queue": "~3.0.0",
-    "hyperf/websocket-server": "~3.0.0",
-    "hyperf/redis": "~3.0.0",
-    "ext-redis": "*"
-  },
-  "require-dev": {
+    "hyperf/utils": "~2.2.0",
+    "hyperf/async-queue": "2.2.*",
+    "hyperf/websocket-server": "2.2.*",
+    "hyperf/redis": "2.2.*",
+    "ext-redis": "*",
     "swoft/swoole-ide-helper": "^4.2"
   },
   "license": "MIT",
@@ -26,6 +24,7 @@
       "email": "chenpeng@kiwiing.com"
     }
   ],
+  "minimum-stability": "dev",
   "extra": {
     "hyperf": {
       "config": "Aston\\DistributeWs\\ConfigProvider"
