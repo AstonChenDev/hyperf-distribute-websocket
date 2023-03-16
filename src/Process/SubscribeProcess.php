@@ -17,7 +17,7 @@ use Hyperf\Redis\RedisFactory;
  */
 class SubscribeProcess extends AbstractProcess
 {
-    public $name = 'subscribe_process';
+    public string $name = 'subscribe_process';
 
     public function handle(): void
     {

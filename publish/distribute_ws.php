@@ -19,9 +19,9 @@ return [
     'ttl' => 7200,//key的过期时间,
     'driver' => QueueDriver::class,// Aston\DistributeWs\Driver\QueueDriver::class |  Aston\DistributeWs\Driver\SubscribeDriver::class,
     'queue_config' => [
-        'process_num' => env('LOCAL_PUSH_PROCESS_NUM', 1),
-        'process_concurrent_limit' => env('LOCAL_PUSH_PROCESS_CONCURRENT_LIMIT', 10)
+        'process_num' => (int)env('LOCAL_PUSH_PROCESS_NUM', 1),
+        'process_concurrent_limit' => (int)env('LOCAL_PUSH_PROCESS_CONCURRENT_LIMIT', 10)
     ],
     'default_opcode' => WEBSOCKET_OPCODE_BINARY,
-    'server_id' => env('DISTRIBUTE_SERVER_ID', uniqid()),//服务器ID，分布式部署时保证每台服务器的SERVER_ID不同即可
+    'server_id' => (string)env('DISTRIBUTE_SERVER_ID', uniqid()),//服务器ID，分布式部署时保证每台服务器的SERVER_ID不同即可
 ];

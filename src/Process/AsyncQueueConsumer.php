@@ -13,15 +13,12 @@ declare(strict_types=1);
 namespace Aston\DistributeWs\Process;
 
 use Hyperf\AsyncQueue\Process\ConsumerProcess;
-use Hyperf\Process\Annotation\Process;
 
 class AsyncQueueConsumer extends ConsumerProcess
 {
-
-    public $name = 'local-async-queue';
+    public string $name = 'local-async-queue';
     /**
      * @var string
      */
-    protected $queue = 'local';
-
+    protected string $queue = 'local';
 }
